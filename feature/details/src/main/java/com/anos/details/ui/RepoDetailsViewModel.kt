@@ -69,8 +69,8 @@ class RepoDetailsViewModel @Inject constructor(
     val readMeContent: StateFlow<ReadmeContent?> = _baseRepoInfo
         .flatMapLatest { repo ->
             getReadMeContentUseCase(
-                owner = repo?.owner?.login ?: "",
-                repo = repo?.name ?: "",
+                owner = repo.owner.login,
+                repo = repo.name ?: "",
                 onError = { /* No-op */ },
             )
         }.stateIn(
@@ -78,16 +78,6 @@ class RepoDetailsViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = null,
         )
-
-    fun setRepoInfo(repoId: Int, owner: String, name: String) {
-        _baseRepoInfo.value = RepoInfo(
-            owner = OwnerInfo(
-                login = owner
-            ),
-            name = name,
-            id = repoId,
-        )
-    }
 
     fun refreshData() {
         _retryTrigger.value++

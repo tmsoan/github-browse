@@ -1,11 +1,13 @@
 package com.anos.details.ui
 
+import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.anos.domain.usecase.GetReadMeContentUseCase
 import com.anos.domain.usecase.GetRepositoryDetailsUseCase
 import com.anos.model.OwnerInfo
 import com.anos.model.ReadmeContent
 import com.anos.model.RepoInfo
+import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.slot
@@ -23,13 +25,16 @@ import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 
 @OptIn(ExperimentalCoroutinesApi::class)
+@RunWith(RobolectricTestRunner::class)
 class RepoDetailsViewModelTest {
-
     private lateinit var viewModel: RepoDetailsViewModel
     private lateinit var getRepositoryDetailsUseCase: GetRepositoryDetailsUseCase
     private lateinit var getReadMeContentUseCase: GetReadMeContentUseCase
+    private lateinit var savedStateHandle: SavedStateHandle
     private val testDispatcher = StandardTestDispatcher()
 
     private val mockRepoInfo = RepoInfo(
@@ -58,8 +63,24 @@ class RepoDetailsViewModelTest {
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
-        getRepositoryDetailsUseCase = mockk()
-        getReadMeContentUseCase = mockk()
+        MockKAnnotations.init(this)
+        getRepositoryDetailsUseCase = mockk(relaxed = true)
+        getReadMeContentUseCase = mockk(relaxed = true)
+
+        val initialRepoInfo = RepoInfo(
+            id = 1,
+            name = "test-repo",
+            owner = OwnerInfo(
+                login = "owner",
+            ),
+        )
+        savedStateHandle = SavedStateHandle(
+            mapOf(
+                "repoId" to initialRepoInfo.id,
+                "owner" to initialRepoInfo.owner.login,
+                "name" to initialRepoInfo.name
+            )
+        )
     }
 
     @After
@@ -72,7 +93,8 @@ class RepoDetailsViewModelTest {
         // When
         viewModel = RepoDetailsViewModel(
             getRepositoryDetailsUseCase,
-            getReadMeContentUseCase
+            getReadMeContentUseCase,
+            savedStateHandle
         )
 
         // Then
@@ -80,7 +102,7 @@ class RepoDetailsViewModelTest {
     }
 
     @Test
-    fun `initial repoInfo should be null`() = runTest {
+    fun `initial repoInfo should be null on some values`() = runTest {
         // Given
         coEvery {
             getRepositoryDetailsUseCase(any(), any(), any(), any(), any())
@@ -93,15 +115,18 @@ class RepoDetailsViewModelTest {
         // When
         viewModel = RepoDetailsViewModel(
             getRepositoryDetailsUseCase,
-            getReadMeContentUseCase
+            getReadMeContentUseCase,
+            savedStateHandle
         )
 
         // Then
-        assertNull(viewModel.repoInfo.value)
+        assertTrue(viewModel.repoInfo.value?.forksCount == 0)
+        assertTrue(viewModel.repoInfo.value?.stargazersCount == 0)
+        assertNull(viewModel.repoInfo.value?.updatedAt)
     }
 
     @Test
-    fun `setRepoInfo should trigger repository details fetch`() = runTest {
+    fun `initial repoInfo should trigger repository details fetch`() = runTest {
         // Given
         val onStartSlot = slot<() -> Unit>()
         val onCompleteSlot = slot<() -> Unit>()
@@ -126,32 +151,26 @@ class RepoDetailsViewModelTest {
 
         viewModel = RepoDetailsViewModel(
             getRepositoryDetailsUseCase,
-            getReadMeContentUseCase
+            getReadMeContentUseCase,
+            savedStateHandle
         )
-
-        // When
-        viewModel.setRepoInfo(
-            repoId = 1,
-            owner = "owner",
-            name = "test-repo"
-        )
-        advanceUntilIdle()
 
         // Then
         assertEquals(DetailsUiState.Loading, viewModel.uiState.value)
 
         viewModel.repoInfo.test {
             val initialValue = awaitItem()
-            assertNull(initialValue)
+            assertNull(initialValue?.updatedAt)
             val items = awaitItem()
             assertEquals(DetailsUiState.Idle, viewModel.uiState.value)
             assertEquals(mockRepoInfo.id, items?.id)
+            assertTrue(items?.updatedAt != null)
             cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
-    fun `setRepoInfo should update uiState to Loading then Idle on success`() = runTest {
+    fun `initial repoInfo should update uiState to Loading then Idle on success`() = runTest {
         // Given
         val onStartSlot = slot<() -> Unit>()
         val onCompleteSlot = slot<() -> Unit>()
@@ -176,19 +195,15 @@ class RepoDetailsViewModelTest {
 
         viewModel = RepoDetailsViewModel(
             getRepositoryDetailsUseCase,
-            getReadMeContentUseCase
+            getReadMeContentUseCase,
+            savedStateHandle
         )
-
-        // When
-        viewModel.setRepoInfo(1, "owner", "test-repo")
-        advanceUntilIdle()
 
         // Then
         assertEquals(DetailsUiState.Loading, viewModel.uiState.value)
 
         viewModel.repoInfo.test {
             val initialValue = awaitItem()
-            assertNull(initialValue)
             val items = awaitItem()
             assertEquals(DetailsUiState.Idle, viewModel.uiState.value)
             cancelAndIgnoreRemainingEvents()
@@ -196,7 +211,7 @@ class RepoDetailsViewModelTest {
     }
 
     @Test
-    fun `setRepoInfo should update uiState to Error on failure`() = runTest {
+    fun `initial repoInfo should update uiState to Error on failure`() = runTest {
         // Given
         val errorMessage = "Network error"
         val onStartSlot = slot<() -> Unit>()
@@ -219,66 +234,16 @@ class RepoDetailsViewModelTest {
 
         viewModel = RepoDetailsViewModel(
             getRepositoryDetailsUseCase,
-            getReadMeContentUseCase
+            getReadMeContentUseCase,
+            savedStateHandle
         )
-
-        // When
-        viewModel.setRepoInfo(1, "owner", "test-repo")
-        advanceUntilIdle()
 
         viewModel.repoInfo.test {
             val initialValue = awaitItem()
-            assertNull(initialValue)
-            awaitItem()
+            val item = awaitItem()
             // Then
             assertTrue(viewModel.uiState.value is DetailsUiState.Error)
             assertEquals(errorMessage, (viewModel.uiState.value as DetailsUiState.Error).message)
-        }
-    }
-
-    @Test
-    fun `repoInfo should emit repository details after setRepoInfo`() = runTest {
-        // Given
-        val onStartSlot = slot<() -> Unit>()
-        val onCompleteSlot = slot<() -> Unit>()
-
-        coEvery {
-            getRepositoryDetailsUseCase(
-                owner = any(),
-                repo = any(),
-                onStart = capture(onStartSlot),
-                onComplete = capture(onCompleteSlot),
-                onError = any()
-            )
-        } returns flow {
-            onStartSlot.captured.invoke()
-            emit(mockRepoInfo)
-            onCompleteSlot.captured.invoke()
-        }
-
-        coEvery {
-            getReadMeContentUseCase(any(), any(), any())
-        } returns flow { emit(mockReadmeContent) }
-
-        viewModel = RepoDetailsViewModel(
-            getRepositoryDetailsUseCase,
-            getReadMeContentUseCase
-        )
-
-        // When
-        viewModel.setRepoInfo(1, "owner", "test-repo")
-
-        // Then
-        viewModel.repoInfo.test {
-            val initialValue = awaitItem()
-            assertNull(initialValue)
-
-            val repoDetails = awaitItem()
-            assertEquals(mockRepoInfo.id, repoDetails?.id)
-            assertEquals(mockRepoInfo.name, repoDetails?.name)
-            assertEquals(mockRepoInfo.fullName, repoDetails?.fullName)
-
-            cancelAndIgnoreRemainingEvents()
         }
     }
 
@@ -299,11 +264,10 @@ class RepoDetailsViewModelTest {
 
         viewModel = RepoDetailsViewModel(
             getRepositoryDetailsUseCase,
-            getReadMeContentUseCase
+            getReadMeContentUseCase,
+            savedStateHandle
         )
-
-        // When
-        viewModel.setRepoInfo(1, "owner", "test-repo")
+        advanceUntilIdle()
 
         // Then
         viewModel.readMeContent.test {
@@ -339,11 +303,9 @@ class RepoDetailsViewModelTest {
 
         viewModel = RepoDetailsViewModel(
             getRepositoryDetailsUseCase,
-            getReadMeContentUseCase
+            getReadMeContentUseCase,
+            savedStateHandle
         )
-
-        // When
-        viewModel.setRepoInfo(1, "owner", "test-repo")
         advanceUntilIdle()
 
         // Then - should not crash, uiState should remain Loading or Idle (not Error for README)
@@ -351,26 +313,5 @@ class RepoDetailsViewModelTest {
             viewModel.uiState.value is DetailsUiState.Loading ||
             viewModel.uiState.value is DetailsUiState.Idle
         )
-    }
-
-    @Test
-    fun `repoInfo should be null when baseRepoInfo is null`() = runTest {
-        // Given
-        coEvery {
-            getRepositoryDetailsUseCase(any(), any(), any(), any(), any())
-        } returns flow { emit(mockRepoInfo) }
-
-        coEvery {
-            getReadMeContentUseCase(any(), any(), any())
-        } returns flow { emit(mockReadmeContent) }
-
-        // When
-        viewModel = RepoDetailsViewModel(
-            getRepositoryDetailsUseCase,
-            getReadMeContentUseCase
-        )
-
-        // Then - before setRepoInfo is called
-        assertNull(viewModel.repoInfo.value)
     }
 }
