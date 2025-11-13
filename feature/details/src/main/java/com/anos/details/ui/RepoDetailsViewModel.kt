@@ -1,13 +1,16 @@
 package com.anos.details.ui
 
 import androidx.compose.runtime.Stable
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.anos.domain.usecase.GetReadMeContentUseCase
 import com.anos.domain.usecase.GetRepositoryDetailsUseCase
 import com.anos.model.OwnerInfo
 import com.anos.model.ReadmeContent
 import com.anos.model.RepoInfo
+import com.anos.navigation.ScreenRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -22,11 +25,22 @@ import javax.inject.Inject
 class RepoDetailsViewModel @Inject constructor(
     private val getRepositoryDetailsUseCase: GetRepositoryDetailsUseCase,
     private val getReadMeContentUseCase: GetReadMeContentUseCase,
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<DetailsUiState>(DetailsUiState.Loading)
     val uiState: StateFlow<DetailsUiState> = _uiState
 
-    private val _baseRepoInfo: MutableStateFlow<RepoInfo?> = MutableStateFlow(null)
+    private val _baseRepoInfo: MutableStateFlow<RepoInfo> = MutableStateFlow(
+        savedStateHandle.toRoute<ScreenRoute.DetailsScreen>().run {
+            RepoInfo(
+                id = repoId,
+                owner = OwnerInfo(
+                    login = owner,
+                ),
+                name = name,
+            )
+        }
+    )
 
     private val _retryTrigger: MutableStateFlow<Int> = MutableStateFlow(0)
 
@@ -35,21 +49,17 @@ class RepoDetailsViewModel @Inject constructor(
         _retryTrigger
     ) { repo, _ -> repo }
         .flatMapLatest { repo ->
-            if (repo == null) {
-                MutableStateFlow(null)
-            } else {
-                getRepositoryDetailsUseCase(
-                    owner = repo.owner.login,
-                    repo = repo.name ?: "",
-                    onStart = { _uiState.value = DetailsUiState.Loading },
-                    onComplete = { _uiState.value = DetailsUiState.Idle },
-                    onError = {
-                        viewModelScope.launch {
-                            _uiState.value = DetailsUiState.Error(it)
-                        }
-                    },
-                )
-            }
+            getRepositoryDetailsUseCase(
+                owner = repo.owner.login,
+                repo = repo.name ?: "",
+                onStart = { _uiState.value = DetailsUiState.Loading },
+                onComplete = { _uiState.value = DetailsUiState.Idle },
+                onError = {
+                    viewModelScope.launch {
+                        _uiState.value = DetailsUiState.Error(it)
+                    }
+                },
+            )
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),

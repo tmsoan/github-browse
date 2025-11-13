@@ -41,9 +41,6 @@ import dev.jeziellago.compose.markdowntext.MarkdownText
 
 @Composable
 fun DetailsRoute(
-    repoId: Int,
-    owner: String,
-    name: String,
     onBackClick: () -> Unit,
     repoDetailsViewModel: RepoDetailsViewModel = hiltViewModel()
 ) {
@@ -60,13 +57,6 @@ fun DetailsRoute(
             repoDetailsViewModel.refreshData()
         }
     )
-    LaunchedEffect(Unit) {
-        repoDetailsViewModel.setRepoInfo(
-            repoId = repoId,
-            owner = owner,
-            name = name
-        )
-    }
 }
 
 @Composable
