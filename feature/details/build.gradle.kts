@@ -1,0 +1,20 @@
+plugins {
+    alias(libs.plugins.gitbrowse.android.feature)
+    alias(libs.plugins.gitbrowse.android.library.compose)
+    alias(libs.plugins.gitbrowse.android.hilt)
+}
+
+android {
+    namespace = "com.anos.feature.details"
+}
+
+dependencies {
+    implementation(libs.compose.markdown)
+
+    testImplementation(libs.mockk)
+    testImplementation(libs.junit)
+    testImplementation(libs.turbine)
+    testImplementation(libs.kotlinx.coroutines.test)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+}

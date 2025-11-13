@@ -1,0 +1,10 @@
+<resources>
+    <string name="details_stars_label">%d stars</string>
+    <string name="details_forks_label">%d forks</string>
+    <string name="details_updated_at_label">Updated at: %s</string>
+    <string name="details_topics_title">Topics:</string>
+    <string name="details_readme_title">README</string>
+    <string name="details_error_title">Error!</string>
+    <string name="details_retry_btn">Try Again</string>
+    <string name="details_repos_empty_message">Failed to fetch repo information. Let try again!</string>
+</resources>

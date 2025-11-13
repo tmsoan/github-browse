@@ -1,0 +1,13 @@
+<resources>
+    <string name="home_title">Github Repositories</string>
+    <string name="home_sheet_reorder_title">Select to reorder</string>
+    <string name="home_sheet_reorder_cancel">Cancel</string>
+    <string name="home_sheet_reorder_apply">Apply Sort</string>
+    <string name="home_sheet_reorder_option_stars">Stars</string>
+    <string name="home_sheet_reorder_option_forks">Forks</string>
+    <string name="home_sheet_reorder_option_updated">Last Updated</string>
+    <string name="home_search_hint">Search name, description…</string>
+    <string name="home_error_title">Error!</string>
+    <string name="home_retry_btn">Try Again</string>
+    <string name="home_repos_empty_message">No repositories found. Let try again!</string>
+</resources>
