@@ -21,7 +21,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "github-browse"
+rootProject.name = "Nov25-GitBrowse"
 include(":app")
 include(":feature:home")
 include(":feature:details")

@@ -35,6 +35,7 @@ import com.anos.feature.home.R
 import com.anos.home.ui.component.HeaderSearchBox
 import com.anos.home.ui.component.RepoCard
 import com.anos.home.ui.component.SettingsModalBottomSheet
+import com.anos.model.OwnerInfo
 import com.anos.model.Repo
 import com.anos.ui.components.GitBrowseAppBar
 import com.anos.ui.components.RetryBox
@@ -176,6 +177,8 @@ fun HomeContent(
         contentAlignment = Alignment.Center
     ) {
         LazyVerticalGrid(
+            modifier = Modifier
+                .fillMaxSize(),
             columns = GridCells.Fixed(2),
             contentPadding = PaddingValues(Dimens.spacing8),
         ) {
@@ -197,8 +200,7 @@ fun HomeContent(
 private fun HomeScreenPreview() {
     GitBrowseTheme {
         HomeScreen(
-            filteredList = listOf(
-            ),
+            filteredList = (0..9).map { Repo(id = it, owner = OwnerInfo(login = "login $it")) }.toList(),
             uiState = HomeUiState.Idle,
             onQueryContent = {},
             searchQuery = "",
