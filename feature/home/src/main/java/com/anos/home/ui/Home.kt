@@ -48,8 +48,8 @@ fun HomeRoute(
     homeViewModel: HomeViewModel = hiltViewModel()
 ) {
     val uiState by homeViewModel.uiState.collectAsStateWithLifecycle()
-    val filteredList = homeViewModel.filteredRepoList
-    val searchQuery by homeViewModel.queryContent
+    val filteredList by homeViewModel.filteredRepoList.collectAsStateWithLifecycle()
+    val searchQuery by homeViewModel.queryContent.collectAsStateWithLifecycle()
 
     HomeScreen(
         uiState = uiState,
@@ -180,7 +180,7 @@ fun HomeContent(
                 onPullToRefresh()
             }
         },
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.TopCenter
     ) {
         LazyVerticalGrid(
             modifier = Modifier

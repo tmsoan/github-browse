@@ -1,10 +1,6 @@
 package com.anos.home.ui
 
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.State
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.anos.domain.usecase.GetRepositoriesUseCase
@@ -12,8 +8,11 @@ import com.anos.model.Repo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -32,20 +31,25 @@ class HomeViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<HomeUiState>(HomeUiState.Loading)
     val uiState: StateFlow<HomeUiState> = _uiState
 
-    private val _queryContent = mutableStateOf("")
-    val queryContent: State<String> = _queryContent
+    private val _queryContent = MutableStateFlow("")
+    val queryContent: StateFlow<String> = _queryContent
 
-    private val _repoList = mutableStateOf<List<Repo>>(emptyList())
+    private val _repoList = MutableStateFlow<List<Repo>>(emptyList())
 
-    val filteredRepoList by derivedStateOf {
-        val repos = _repoList.value
-        val query = _queryContent.value
+    val filteredRepoList: StateFlow<List<Repo>> = combine(
+        _repoList,
+        _queryContent
+    ) { repos, query ->
         if (query.isBlank()) repos
         else repos.filter {
             it.fullName?.contains(query, ignoreCase = true) == true ||
                     it.description?.contains(query, ignoreCase = true) == true
         }
-    }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = emptyList(),
+    )
 
     init {
         // Initial fetch of repositories
