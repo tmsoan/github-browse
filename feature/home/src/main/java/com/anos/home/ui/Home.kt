@@ -48,8 +48,8 @@ fun HomeRoute(
     homeViewModel: HomeViewModel = hiltViewModel()
 ) {
     val uiState by homeViewModel.uiState.collectAsStateWithLifecycle()
-    val filteredList by homeViewModel.filteredRepoList.collectAsStateWithLifecycle()
-    val searchQuery by homeViewModel.queryContent.collectAsStateWithLifecycle()
+    val filteredList = homeViewModel.filteredRepoList
+    val searchQuery by homeViewModel.queryContent
 
     HomeScreen(
         uiState = uiState,
@@ -132,6 +132,7 @@ private fun HomeScreen(
                 .fillMaxSize()
                 .padding(paddingValues),
             uiState = uiState,
+            isSearching = isSearching,
             repoList = filteredList,
             onItemClick = onItemClick,
             onFetchNextPage = onFetchNextPage,
@@ -163,6 +164,7 @@ fun HomeContent(
     modifier: Modifier = Modifier,
     uiState: HomeUiState,
     repoList: List<Repo>,
+    isSearching: Boolean,
     onItemClick: (Repo) -> Unit,
     onFetchNextPage: () -> Unit,
     onPullToRefresh: () -> Unit,
@@ -173,7 +175,11 @@ fun HomeContent(
         modifier = modifier,
         state = pullToRefreshState,
         isRefreshing = uiState == HomeUiState.Loading,
-        onRefresh = onPullToRefresh,
+        onRefresh = {
+            if (!isSearching) {
+                onPullToRefresh()
+            }
+        },
         contentAlignment = Alignment.Center
     ) {
         LazyVerticalGrid(
@@ -183,7 +189,7 @@ fun HomeContent(
             contentPadding = PaddingValues(Dimens.spacing8),
         ) {
             itemsIndexed(items = repoList, key = { _, repo -> repo.id }) { index, repo ->
-                if ((index + 1) >= repoList.size && uiState != HomeUiState.Loading) {
+                if (!isSearching && (index + 1) >= repoList.size && uiState != HomeUiState.Loading) {
                     onFetchNextPage()
                 }
                 RepoCard(
