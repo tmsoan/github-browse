@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 @Parcelize
 @Serializable
 data class Repo(
-    var page: Int = 0,
+    val page: Int = 0,
 
     @SerialName(value = "id")
     val id: Int,

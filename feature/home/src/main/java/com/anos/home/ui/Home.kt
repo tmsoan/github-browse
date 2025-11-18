@@ -41,6 +41,7 @@ import com.anos.ui.components.GitBrowseAppBar
 import com.anos.ui.components.RetryBox
 import com.anos.ui.theme.Dimens
 import com.anos.ui.theme.GitBrowseTheme
+import com.skydoves.compose.stability.runtime.TraceRecomposition
 
 @Composable
 fun HomeRoute(
@@ -64,6 +65,7 @@ fun HomeRoute(
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@TraceRecomposition(threshold = 3)
 @Composable
 private fun HomeScreen(
     uiState: HomeUiState,
@@ -159,6 +161,7 @@ private fun HomeScreen(
     }
 }
 
+@TraceRecomposition
 @Composable
 fun HomeContent(
     modifier: Modifier = Modifier,

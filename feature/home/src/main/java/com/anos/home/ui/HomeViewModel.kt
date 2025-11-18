@@ -10,6 +10,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
@@ -29,10 +30,10 @@ class HomeViewModel @Inject constructor(
     private val _minFetchInterval: Long = MIN_FETCH_INTERVAL_MS // 1 second debounce
 
     private val _uiState = MutableStateFlow<HomeUiState>(HomeUiState.Loading)
-    val uiState: StateFlow<HomeUiState> = _uiState
+    val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
     private val _queryContent = MutableStateFlow("")
-    val queryContent: StateFlow<String> = _queryContent
+    val queryContent: StateFlow<String> = _queryContent.asStateFlow()
 
     private val _repoList = MutableStateFlow<List<Repo>>(emptyList())
 
