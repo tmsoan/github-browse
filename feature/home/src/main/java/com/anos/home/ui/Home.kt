@@ -79,7 +79,7 @@ private fun HomeScreen(
 ) {
     val sheetState = rememberModalBottomSheetState()
     val showSettingsSheet = remember { mutableStateOf(false) }
-    var isSearching by rememberSaveable { mutableStateOf(false) }
+    val isSearching = remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
 
     if (showSettingsSheet.value) {
@@ -93,40 +93,21 @@ private fun HomeScreen(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            if (isSearching) {
-                HeaderSearchBox(
-                    searchQuery = searchQuery,
-                    onQueryContent = onQueryContent,
-                    onCloseClick = {
-                        isSearching = false
-                        onQueryContent("")
-                    }
-                )
-            } else {
-                GitBrowseAppBar(
-                    title = stringResource(R.string.home_title),
-                    leftActions = {
-                        IconButton(onClick = {
-                            showSettingsSheet.value = true
-                        }) {
-                            Icon(
-                                painter = painterResource(id = com.anos.ui.R.drawable.outline_reorder_24),
-                                contentDescription = "Reorder",
-                                tint = MaterialTheme.colorScheme.primary,
-                            )
-                        }
-                    },
-                    rightActions = {
-                        IconButton(onClick = { isSearching = true }) {
-                            Icon(
-                                painter = painterResource(id = com.anos.ui.R.drawable.outline_search_24),
-                                contentDescription = "Search",
-                                tint = MaterialTheme.colorScheme.primary,
-                            )
-                        }
-                    }
-                )
-            }
+            HomeHeader(
+                isSearching = isSearching.value,
+                searchQuery = searchQuery,
+                onQueryContent = onQueryContent,
+                onSearchCloseClick = {
+                    isSearching.value = false
+                    onQueryContent("")
+                },
+                onMenuClick = {
+                    showSettingsSheet.value = true
+                },
+                onSearchClick = {
+                    isSearching.value = true
+                }
+            )
         }
     ) { paddingValues ->
         HomeContent(
@@ -134,14 +115,14 @@ private fun HomeScreen(
                 .fillMaxSize()
                 .padding(paddingValues),
             uiState = uiState,
-            isSearching = isSearching,
+            isSearching = isSearching.value,
             repoList = filteredList,
             onItemClick = onItemClick,
             onFetchNextPage = onFetchNextPage,
             onPullToRefresh = onPullToRefresh,
         )
 
-        if (uiState is HomeUiState.Error && !isSearching) {
+        if (uiState is HomeUiState.Error && !isSearching.value) {
             RetryBox(
                 modifier = Modifier
                     .fillMaxSize()
@@ -161,9 +142,49 @@ private fun HomeScreen(
     }
 }
 
+@Composable
+private fun HomeHeader(
+    isSearching: Boolean,
+    searchQuery: String,
+    onQueryContent: (String) -> Unit,
+    onSearchCloseClick: () -> Unit,
+    onMenuClick: () -> Unit,
+    onSearchClick: () -> Unit,
+) {
+    if (isSearching) {
+        HeaderSearchBox(
+            searchQuery = searchQuery,
+            onQueryContent = onQueryContent,
+            onCloseClick = onSearchCloseClick
+        )
+    } else {
+        GitBrowseAppBar(
+            title = stringResource(R.string.home_title),
+            leftActions = {
+                IconButton(onClick = onMenuClick) {
+                    Icon(
+                        painter = painterResource(id = com.anos.ui.R.drawable.outline_reorder_24),
+                        contentDescription = "Reorder",
+                        tint = MaterialTheme.colorScheme.primary,
+                    )
+                }
+            },
+            rightActions = {
+                IconButton(onClick = onSearchClick) {
+                    Icon(
+                        painter = painterResource(id = com.anos.ui.R.drawable.outline_search_24),
+                        contentDescription = "Search",
+                        tint = MaterialTheme.colorScheme.primary,
+                    )
+                }
+            }
+        )
+    }
+}
+
 @TraceRecomposition
 @Composable
-fun HomeContent(
+private fun HomeContent(
     modifier: Modifier = Modifier,
     uiState: HomeUiState,
     repoList: List<Repo>,
