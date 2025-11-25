@@ -22,8 +22,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -37,17 +35,21 @@ import com.anos.home.ui.component.RepoCard
 import com.anos.home.ui.component.SettingsModalBottomSheet
 import com.anos.model.OwnerInfo
 import com.anos.model.Repo
+import com.anos.navigation.AppNavigator
+import com.anos.navigation.ScreenRoute
+import com.anos.navigation.currentComposeNavigator
 import com.anos.ui.components.GitBrowseAppBar
 import com.anos.ui.components.RetryBox
+import com.anos.ui.theme.AppTheme
 import com.anos.ui.theme.Dimens
-import com.anos.ui.theme.GitBrowseTheme
 import com.skydoves.compose.stability.runtime.TraceRecomposition
 
 @Composable
 fun HomeRoute(
-    onItemClick: (Repo) -> Unit,
     homeViewModel: HomeViewModel = hiltViewModel()
 ) {
+    val composeNavigator: AppNavigator = currentComposeNavigator
+
     val uiState by homeViewModel.uiState.collectAsStateWithLifecycle()
     val filteredList by homeViewModel.filteredRepoList.collectAsStateWithLifecycle()
     val searchQuery by homeViewModel.queryContent.collectAsStateWithLifecycle()
@@ -57,7 +59,11 @@ fun HomeRoute(
         filteredList = filteredList,
         searchQuery = searchQuery,
         onQueryContent = { homeViewModel.updateQueryContent(it) },
-        onItemClick = onItemClick,
+        onItemClick = { repo ->
+            composeNavigator.navigate(
+                ScreenRoute.DetailsScreen(repo = repo)
+            )
+        },
         onFetchNextPage = homeViewModel::fetchNextRepoList,
         onPullToRefresh = homeViewModel::refreshRepoList,
         onRetryClick = homeViewModel::refreshRepoList,
@@ -228,7 +234,7 @@ private fun HomeContent(
 @Preview
 @Composable
 private fun HomeScreenPreview() {
-    GitBrowseTheme {
+    AppTheme {
         HomeScreen(
             filteredList = (0..9).map { Repo(id = it, owner = OwnerInfo(login = "login $it")) }.toList(),
             uiState = HomeUiState.Idle,

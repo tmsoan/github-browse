@@ -12,11 +12,9 @@ android {
 dependencies {
     implementation(project(":core:model"))
 
-    // navigation
-    api(libs.androidx.navigation.compose)
-    api(libs.androidx.navigation.fragment.ktx)
-    api(libs.androidx.navigation.ui.ktx)
-    api(libs.androidx.hilt.navigation.compose)
+    // Navigation3
+    api(libs.androidx.navigation3.runtime)
+    api(libs.androidx.navigation3.ui)
 
     // json parsing
     implementation(libs.kotlinx.serialization.json)

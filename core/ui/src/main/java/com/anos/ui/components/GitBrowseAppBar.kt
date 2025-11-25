@@ -14,7 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.anos.ui.theme.GitBrowseTheme
+import com.anos.ui.theme.AppTheme
 
 @Composable
 fun GitBrowseAppBar(
@@ -65,8 +65,8 @@ fun GitBrowseAppBar(
 
 @Preview
 @Composable
-private fun GitBrowseAppBarPreview() {
-    GitBrowseTheme {
+private fun AppAppBarPreview() {
+    AppTheme {
         GitBrowseAppBar(
             title = "My App",
             leftActions = {
