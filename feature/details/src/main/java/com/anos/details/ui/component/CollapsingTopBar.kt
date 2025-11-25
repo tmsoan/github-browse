@@ -7,7 +7,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -23,6 +22,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
+import com.anos.ui.theme.AppTheme
 import com.anos.ui.theme.Dimens
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
@@ -76,13 +76,13 @@ internal fun CollapsingTopBar(
                 Icon(
                     painter = painterResource(id = com.anos.ui.R.drawable.outline_arrow_back_24),
                     contentDescription = "Back",
-                    tint = MaterialTheme.colorScheme.primary
+                    tint = AppTheme.colors.primary
                 )
             }
         },
         colors = TopAppBarDefaults.largeTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.background,
-            scrolledContainerColor = MaterialTheme.colorScheme.background,
+            containerColor = AppTheme.background.color,
+            scrolledContainerColor = AppTheme.background.color,
         ),
         scrollBehavior = scrollBehavior
     )

@@ -2,9 +2,17 @@ package com.anos.ui.theme
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import com.anos.ui.R
+
+/**
+ * Local providers for various properties we connect to our components, for styling.
+ */
+val LocalColors = compositionLocalOf<AppColors> {
+    error("No colors provided! Make sure to wrap all usages of App components in AppTheme.")
+}
 
 @Immutable
 public data class AppColors(

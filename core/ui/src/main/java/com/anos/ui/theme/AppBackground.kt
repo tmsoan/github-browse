@@ -33,5 +33,5 @@ public data class AppBackground(
     }
 }
 
-public val LocalBackgroundTheme: ProvidableCompositionLocal<AppBackground> =
+public val LocalBackground: ProvidableCompositionLocal<AppBackground> =
     staticCompositionLocalOf { AppBackground() }

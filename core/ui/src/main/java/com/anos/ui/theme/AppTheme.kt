@@ -6,17 +6,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
-import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
-
-/**
- * Local providers for various properties we connect to our components, for styling.
- */
-private val LocalColors = compositionLocalOf<AppColors> {
-    error("No colors provided! Make sure to wrap all usages of App components in AppTheme.")
-}
 
 @Composable
 fun AppTheme(
@@ -31,7 +23,7 @@ fun AppTheme(
 ) {
     CompositionLocalProvider(
         LocalColors provides colors,
-        LocalBackgroundTheme provides background,
+        LocalBackground provides background,
     ) {
         Box(
             modifier = Modifier
@@ -43,13 +35,14 @@ fun AppTheme(
     }
 }
 
-object AppThemeProps {
+object AppTheme {
     /**
      * Retrieves the current [AppColors] at the call site's position in the hierarchy.
      */
     val colors: AppColors
         @Composable
-        get() = AppColors.defaultLightColors()
+        @ReadOnlyComposable
+        get() = LocalColors.current
 
     /**
      * Retrieves the current [AppBackground] at the call site's position in the hierarchy.
@@ -57,5 +50,5 @@ object AppThemeProps {
     val background: AppBackground
         @Composable
         @ReadOnlyComposable
-        get() = LocalBackgroundTheme.current
+        get() = LocalBackground.current
 }

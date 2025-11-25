@@ -36,6 +36,7 @@ import com.anos.model.Repo
 import com.anos.model.RepoInfo
 import com.anos.navigation.currentComposeNavigator
 import com.anos.ui.components.RetryBox
+import com.anos.ui.theme.AppTheme
 import com.anos.ui.theme.Dimens
 import dev.jeziellago.compose.markdowntext.MarkdownText
 
@@ -89,31 +90,31 @@ private fun DetailsScreen(
             )
         }
     ) { innerPadding ->
-        when {
-            uiState == DetailsUiState.Loading -> {
+        when (uiState) {
+            DetailsUiState.Loading -> {
                 RepoDetailsSkeleton(
                     modifier = Modifier.padding(innerPadding)
                 )
             }
-            uiState == DetailsUiState.Idle && repoInfo != null -> {
+            DetailsUiState.Idle if repoInfo != null -> {
                 DetailsContent(
                     modifier = Modifier.padding(innerPadding),
                     repoInfo = repoInfo,
                     readmeContent = readmeContent,
                 )
             }
-            uiState is DetailsUiState.Error -> {
+            is DetailsUiState.Error -> {
                 RetryBox(
                     modifier = Modifier
-                        .padding(innerPadding)
                         .fillMaxSize()
-                        .background(MaterialTheme.colorScheme.background),
+                        .background(AppTheme.background.color),
                     title = stringResource(R.string.details_error_title),
                     message = stringResource(R.string.details_repos_empty_message),
                     buttonText = stringResource(R.string.details_retry_btn),
                     onRetryClick = { onRetryClick() }
                 )
             }
+            else -> Unit
         }
     }
 }
@@ -250,8 +251,7 @@ private fun ReadmeContent(
         Spacer(modifier = Modifier.height(Dimens.spacing8))
         MarkdownText(
             modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background),
+                .fillMaxSize(),
             markdown = decodeBase64(readmeContent.content.orEmpty()).orEmpty()
         )
     }

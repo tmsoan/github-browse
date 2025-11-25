@@ -10,7 +10,6 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -132,7 +131,7 @@ private fun HomeScreen(
             RetryBox(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.background),
+                    .background(AppTheme.background.color),
                 title = stringResource(R.string.home_error_title),
                 message = stringResource(R.string.home_repos_empty_message),
                 buttonText = stringResource(R.string.home_retry_btn),
@@ -171,7 +170,7 @@ private fun HomeHeader(
                     Icon(
                         painter = painterResource(id = com.anos.ui.R.drawable.outline_reorder_24),
                         contentDescription = "Reorder",
-                        tint = MaterialTheme.colorScheme.primary,
+                        tint = AppTheme.colors.absoluteWhite,
                     )
                 }
             },
@@ -180,7 +179,7 @@ private fun HomeHeader(
                     Icon(
                         painter = painterResource(id = com.anos.ui.R.drawable.outline_search_24),
                         contentDescription = "Search",
-                        tint = MaterialTheme.colorScheme.primary,
+                        tint = AppTheme.colors.absoluteWhite,
                     )
                 }
             }
