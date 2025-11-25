@@ -1,7 +1,7 @@
 plugins {
     id("kotlin-kapt")
     alias(libs.plugins.gitbrowse.android.library)
-    alias(libs.plugins.gitbrowse.android.hilt)
+//    alias(libs.plugins.gitbrowse.android.hilt)
     alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.ksp)
 }
@@ -22,6 +22,11 @@ android {
 dependencies {
     implementation(project(":core:model"))
 
+    implementation(libs.koin.core)
+    implementation(libs.koin.annotations)
+    implementation(libs.javax.inject)
+    ksp(libs.koin.ksp.compiler)
+
     implementation(libs.androidx.core.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -35,4 +40,8 @@ dependencies {
     ksp(libs.androidx.room.compiler)
 
     implementation(libs.kotlinx.serialization.json)
+}
+
+ksp {
+    arg("KOIN_CONFIG_CHECK","true")
 }

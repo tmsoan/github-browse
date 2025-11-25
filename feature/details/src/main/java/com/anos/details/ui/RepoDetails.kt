@@ -17,13 +17,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.anos.common.convertUtcToLocal
 import com.anos.common.decodeBase64
@@ -31,18 +29,19 @@ import com.anos.details.ui.component.CollapsingTopBar
 import com.anos.details.ui.component.IconLabel
 import com.anos.details.ui.component.RepoDetailsSkeleton
 import com.anos.details.ui.component.SlightHorizontalDivider
-import com.anos.feature.details.R
+import com.anos.details.R
 import com.anos.model.ReadmeContent
 import com.anos.model.RepoInfo
 import com.anos.ui.components.RetryBox
 import com.anos.ui.theme.Dimens
 import dev.jeziellago.compose.markdowntext.MarkdownText
+import org.koin.compose.viewmodel.koinViewModel
 
 
 @Composable
 fun DetailsRoute(
     onBackClick: () -> Unit,
-    repoDetailsViewModel: RepoDetailsViewModel = hiltViewModel()
+    repoDetailsViewModel: RepoDetailsViewModel = koinViewModel()
 ) {
     val uiState: DetailsUiState by repoDetailsViewModel.uiState.collectAsStateWithLifecycle()
     val repoInfo: RepoInfo? by repoDetailsViewModel.repoInfo.collectAsStateWithLifecycle()

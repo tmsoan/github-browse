@@ -1,10 +1,12 @@
 package com.anos.domain.usecase
 
 import com.anos.domain.repository.GitHubRepository
-import javax.inject.Inject
+import org.koin.core.annotation.Factory
+import org.koin.core.annotation.Provided
 
-class GetRepositoriesUseCase @Inject constructor(
-    private val gitHubRepository: GitHubRepository,
+@Factory
+class GetRepositoriesUseCase(
+    @Provided private val gitHubRepository: GitHubRepository,
 ) {
     suspend operator fun invoke(
         page: Int,

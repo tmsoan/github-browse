@@ -11,7 +11,6 @@ import com.anos.model.OwnerInfo
 import com.anos.model.ReadmeContent
 import com.anos.model.RepoInfo
 import com.anos.navigation.ScreenRoute
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -19,10 +18,10 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import org.koin.android.annotation.KoinViewModel
 
-@HiltViewModel
-class RepoDetailsViewModel @Inject constructor(
+@KoinViewModel
+class RepoDetailsViewModel(
     private val getRepositoryDetailsUseCase: GetRepositoryDetailsUseCase,
     private val getReadMeContentUseCase: GetReadMeContentUseCase,
     savedStateHandle: SavedStateHandle,

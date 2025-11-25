@@ -18,7 +18,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import com.anos.feature.home.R
+import com.anos.home.R
 import com.anos.ui.theme.Dimens
 
 @Composable

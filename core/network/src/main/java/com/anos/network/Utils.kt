@@ -4,6 +4,7 @@ import com.anos.model.result.NetworkResult
 import retrofit2.HttpException
 import retrofit2.Response
 
+@Suppress(names = ["UNCHECKED_CAST"])
 suspend fun <T : Any> safeApiCall(
     apiExecute: suspend () -> Response<T>,
 ): NetworkResult<T> {

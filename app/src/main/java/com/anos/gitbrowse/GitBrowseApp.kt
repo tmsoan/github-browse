@@ -5,11 +5,19 @@ import android.util.Log
 import com.skydoves.compose.stability.runtime.ComposeStabilityAnalyzer
 import com.skydoves.compose.stability.runtime.RecompositionEvent
 import com.skydoves.compose.stability.runtime.RecompositionLogger
-import dagger.hilt.android.HiltAndroidApp
+import org.koin.android.ext.koin.androidContext
+import org.koin.androidx.workmanager.koin.workManagerFactory
+import org.koin.core.annotation.KoinApplication
+import org.koin.core.context.startKoin
 
-@HiltAndroidApp
+@KoinApplication
 class GitBrowseApp : Application() {
     override fun onCreate() {
+        // Start Koin before Hilt
+        startKoin {
+            androidContext(this@GitBrowseApp)
+            workManagerFactory()
+        }
         super.onCreate()
         setupComposeStabilityAnalyzer()
     }

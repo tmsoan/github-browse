@@ -1,5 +1,5 @@
 [versions]
-agp = "8.12.0"
+agp = "8.12.3"
 kotlin = "2.2.21"
 coreKtx = "1.17.0"
 junit = "4.13.2"
@@ -13,7 +13,7 @@ appcompat = "1.7.1"
 material = "1.13.0"
 hilt = "2.56"
 jetbrainsKotlinJvm = "2.0.21"
-ksp = "2.2.0-2.0.2"
+ksp = "2.3.2"
 androidTools = "31.13.0"
 androidxHiltNavigationCompose = "1.3.0"
 androidxLifecycle = "2.9.4"
@@ -31,6 +31,10 @@ composeMarkdown = "0.5.7"
 turbine = "1.2.1"
 robolectric = "4.16"
 androidxRoom = "2.7.2"
+koin = "4.1.1"
+koin-annotations = "2.3.1"
+kotzilla = "1.3.0"
+androidxMetrics = "1.0.0-beta01"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -76,6 +80,19 @@ okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor",
 retrofit-core = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofit-kotlin-serialization = { group = "com.squareup.retrofit2", name = "converter-kotlinx-serialization", version.ref = "retrofit" }
 landscapist-glide = { group = "com.github.skydoves", name = "landscapist-glide", version.ref = "landscapist" }
+javax-inject = { module = "javax.inject:javax.inject", version = "1" }
+
+# Koin
+koin-core = {group = "io.insert-koin", name = "koin-core", version.ref = "koin"}
+koin-android = {group = "io.insert-koin", name = "koin-android", version.ref = "koin"}
+koin-androidx-worker = {group = "io.insert-koin", name = "koin-androidx-workmanager", version.ref = "koin"}
+koin-compose-viewmodel = {group = "io.insert-koin", name = "koin-compose-viewmodel", version.ref = "koin"}
+# Koin Annotations
+koin-annotations = {module = "io.insert-koin:koin-annotations", version.ref = "koin-annotations"}
+koin-ksp-compiler = {module = "io.insert-koin:koin-ksp-compiler", version.ref = "koin-annotations"}
+# Kotzilla
+kotzilla-sdk = {module = "io.kotzilla:kotzilla-sdk-compose", version.ref = "kotzilla"}
+kotzilla-core = {module = "io.kotzilla:kotzilla-core", version.ref = "kotzilla"}
 
 # Dependencies of the included build-logic
 android-gradleApiPlugin = { group = "com.android.tools.build", name = "gradle-api", version.ref = "agp" }
@@ -86,6 +103,7 @@ kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-pl
 ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
+androidx-metrics-performance = { group = "androidx.metrics", name = "metrics-performance", version.ref = "androidxMetrics" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -99,6 +117,8 @@ kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref =
 hilt-plugin = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 stability-analyzer = { id = "com.github.skydoves.compose.stability.analyzer", version = "0.5.2" }
+kotzilla = { id  = "io.kotzilla.kotzilla-plugin", version.ref = "kotzilla" }
+allOpen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "kotlin" }
 
 # Pluginf defined by this project
 gitbrowse-android-application = { id = "gitbrowse.android.application" }

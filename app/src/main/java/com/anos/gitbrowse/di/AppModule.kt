@@ -1,19 +1,23 @@
 package com.anos.gitbrowse.di
 
-import android.content.Context
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import com.anos.gitbrowse.MainActivityViewModel
+import org.koin.android.annotation.KoinViewModel
+import org.koin.core.annotation.ComponentScan
+import org.koin.core.annotation.Configuration
+import org.koin.core.annotation.Module
+
+@Module(includes = [HomeModule::class, DomainModule::class])
+@Configuration
+class AppModule {
+    // keep here to avoid ComponentScan scanning too much in other components
+    @KoinViewModel
+    fun mainActivityViewModel() = MainActivityViewModel()
+}
 
 @Module
-@InstallIn(SingletonComponent::class)
-class AppModule {
-    @Singleton
-    @Provides
-    fun provideApplicationContext(@ApplicationContext context: Context): Context {
-        return context
-    }
-}
+@ComponentScan("com.anos.home.ui")
+class HomeModule
+
+@Module
+@ComponentScan("com.anos.domain")
+class DomainModule

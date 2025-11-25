@@ -22,16 +22,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.anos.feature.home.R
+import com.anos.home.R
 import com.anos.home.ui.component.HeaderSearchBox
 import com.anos.home.ui.component.RepoCard
 import com.anos.home.ui.component.SettingsModalBottomSheet
@@ -42,11 +39,12 @@ import com.anos.ui.components.RetryBox
 import com.anos.ui.theme.Dimens
 import com.anos.ui.theme.GitBrowseTheme
 import com.skydoves.compose.stability.runtime.TraceRecomposition
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun HomeRoute(
     onItemClick: (Repo) -> Unit,
-    homeViewModel: HomeViewModel = hiltViewModel()
+    homeViewModel: HomeViewModel = koinViewModel()
 ) {
     val uiState by homeViewModel.uiState.collectAsStateWithLifecycle()
     val filteredList by homeViewModel.filteredRepoList.collectAsStateWithLifecycle()

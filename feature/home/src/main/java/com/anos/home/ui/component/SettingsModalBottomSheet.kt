@@ -23,7 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
-import com.anos.feature.home.R
+import com.anos.home.R
 import com.anos.home.ui.SortOption
 import com.anos.ui.theme.Dimens
 

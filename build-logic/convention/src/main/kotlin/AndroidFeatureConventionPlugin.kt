@@ -15,11 +15,16 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
             pluginManager.apply {
                 apply("com.android.library")
                 apply("org.jetbrains.kotlin.android")
+                apply("com.google.devtools.ksp")
             }
 
             val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
 
             dependencies {
+                add("implementation", libs.findLibrary("koin.compose.viewmodel").get())
+                add("implementation", libs.findLibrary("koin.annotations").get())
+                add("ksp", libs.findLibrary("koin.ksp.compiler").get())
+
                 add("implementation", libs.findLibrary("androidx.lifecycle.runtimeCompose").get())
                 add("implementation", libs.findLibrary("androidx.lifecycle.viewModelCompose").get())
                 add("implementation", libs.findLibrary("androidx.navigation.compose").get())
