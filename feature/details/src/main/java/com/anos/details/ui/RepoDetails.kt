@@ -23,7 +23,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.anos.common.convertUtcToLocal
 import com.anos.common.decodeBase64
@@ -42,16 +41,16 @@ import com.anos.ui.theme.AppTheme
 import com.anos.ui.theme.AppThemeProps
 import com.anos.ui.theme.Dimens
 import dev.jeziellago.compose.markdowntext.MarkdownText
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 
 @Composable
 fun DetailsRoute(
     repo: Repo,
-    repoDetailsViewModel: RepoDetailsViewModel = hiltViewModel(
+    repoDetailsViewModel: RepoDetailsViewModel = koinViewModel(
         key = repo.id.toString(),
-        creationCallback = { factory: RepoDetailsViewModel.Factory ->
-            factory.create(repo)
-        }
+        parameters = { parametersOf(repo) },
     )
 ) {
     val composeNavigator = currentComposeNavigator

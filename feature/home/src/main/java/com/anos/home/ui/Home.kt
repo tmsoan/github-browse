@@ -25,7 +25,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.anos.feature.home.R
 import com.anos.home.ui.component.HomeTopBarWithSearch
@@ -42,10 +41,11 @@ import com.anos.ui.theme.AppTheme
 import com.anos.ui.theme.AppThemeProps
 import com.anos.ui.theme.Dimens
 import com.skydoves.compose.stability.runtime.TraceRecomposition
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun HomeRoute(
-    homeViewModel: HomeViewModel = hiltViewModel()
+    homeViewModel: HomeViewModel = koinViewModel()
 ) {
     val composeNavigator: AppNavigator = currentComposeNavigator
 

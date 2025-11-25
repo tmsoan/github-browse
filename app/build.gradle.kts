@@ -2,8 +2,9 @@ plugins {
     id("kotlin-kapt")
     alias(libs.plugins.gitbrowse.android.application)
     alias(libs.plugins.gitbrowse.android.application.compose)
-    alias(libs.plugins.gitbrowse.android.hilt)
+//    alias(libs.plugins.gitbrowse.android.hilt)
     alias(libs.plugins.stability.analyzer)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -58,6 +59,7 @@ dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:ui"))
     implementation(project(":core:navigation"))
+
     implementation(project(":feature:home"))
     implementation(project(":feature:details"))
 
@@ -65,6 +67,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.metrics.performance)
 
     // test and debug
     testImplementation(libs.junit)
@@ -72,5 +75,17 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     // hilt
-    ksp(libs.hilt.compiler)
+//    ksp(libs.hilt.compiler)
+
+    // koin
+    implementation(libs.koin.core)
+    implementation(libs.koin.compose.viewmodel)
+    implementation(libs.koin.androidx.worker)
+    implementation(libs.koin.annotations)
+    ksp(libs.koin.ksp.compiler)
+    implementation(libs.kotzilla.sdk)
+}
+
+ksp {
+    arg("KOIN_CONFIG_CHECK","true")
 }
