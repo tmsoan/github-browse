@@ -2,7 +2,9 @@ package com.anos.network.di
 
 import android.content.Context
 import com.anos.network.BuildConfig
+import com.anos.network.interceptor.AuthInterceptor
 import com.anos.network.interceptor.CacheInterceptor
+import com.anos.network.interceptor.TokenAuthenticator
 import com.anos.network.service.RemoteDataSource
 import com.anos.network.service.GitHubApi
 import dagger.Module
@@ -63,6 +65,9 @@ internal object NetworkModule {
             addInterceptor(cacheInterceptor)
             connectTimeout(10, TimeUnit.SECONDS)
             readTimeout(10, TimeUnit.SECONDS)
+            // refresh token
+            /*addInterceptor(AuthInterceptor(sharedPreferences))
+            authenticator(TokenAuthenticator(apiService, sharedPreferences))*/
         }.build()
     }
 
