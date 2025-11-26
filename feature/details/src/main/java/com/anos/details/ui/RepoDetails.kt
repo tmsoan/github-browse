@@ -17,7 +17,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -33,17 +32,26 @@ import com.anos.details.ui.component.RepoDetailsSkeleton
 import com.anos.details.ui.component.SlightHorizontalDivider
 import com.anos.feature.details.R
 import com.anos.model.ReadmeContent
+import com.anos.model.Repo
 import com.anos.model.RepoInfo
+import com.anos.navigation.currentComposeNavigator
 import com.anos.ui.components.RetryBox
+import com.anos.ui.theme.AppTheme
 import com.anos.ui.theme.Dimens
 import dev.jeziellago.compose.markdowntext.MarkdownText
 
 
 @Composable
 fun DetailsRoute(
-    onBackClick: () -> Unit,
-    repoDetailsViewModel: RepoDetailsViewModel = hiltViewModel()
+    repo: Repo,
+    repoDetailsViewModel: RepoDetailsViewModel = hiltViewModel(
+        key = repo.id.toString(),
+        creationCallback = { factory: RepoDetailsViewModel.Factory ->
+            factory.create(repo)
+        }
+    )
 ) {
+    val composeNavigator = currentComposeNavigator
     val uiState: DetailsUiState by repoDetailsViewModel.uiState.collectAsStateWithLifecycle()
     val repoInfo: RepoInfo? by repoDetailsViewModel.repoInfo.collectAsStateWithLifecycle()
     val readMeContent: ReadmeContent? by repoDetailsViewModel.readMeContent.collectAsStateWithLifecycle()
@@ -52,7 +60,9 @@ fun DetailsRoute(
         uiState = uiState,
         repoInfo = repoInfo,
         readmeContent = readMeContent,
-        onBack = onBackClick,
+        onBack = {
+            composeNavigator.navigateUp()
+        },
         onRetryClick = {
             repoDetailsViewModel.refreshData()
         }
@@ -80,30 +90,31 @@ private fun DetailsScreen(
             )
         }
     ) { innerPadding ->
-        when {
-            uiState == DetailsUiState.Loading -> {
+        when (uiState) {
+            DetailsUiState.Loading -> {
                 RepoDetailsSkeleton(
                     modifier = Modifier.padding(innerPadding)
                 )
             }
-            uiState == DetailsUiState.Idle && repoInfo != null -> {
+            DetailsUiState.Idle if repoInfo != null -> {
                 DetailsContent(
                     modifier = Modifier.padding(innerPadding),
                     repoInfo = repoInfo,
                     readmeContent = readmeContent,
                 )
             }
-            uiState is DetailsUiState.Error -> {
+            is DetailsUiState.Error -> {
                 RetryBox(
-                    modifier = Modifier.padding(innerPadding)
+                    modifier = Modifier
                         .fillMaxSize()
-                        .background(MaterialTheme.colorScheme.background),
+                        .background(AppTheme.background.color),
                     title = stringResource(R.string.details_error_title),
                     message = stringResource(R.string.details_repos_empty_message),
                     buttonText = stringResource(R.string.details_retry_btn),
                     onRetryClick = { onRetryClick() }
                 )
             }
+            else -> Unit
         }
     }
 }
@@ -240,8 +251,7 @@ private fun ReadmeContent(
         Spacer(modifier = Modifier.height(Dimens.spacing8))
         MarkdownText(
             modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background),
+                .fillMaxSize(),
             markdown = decodeBase64(readmeContent.content.orEmpty()).orEmpty()
         )
     }

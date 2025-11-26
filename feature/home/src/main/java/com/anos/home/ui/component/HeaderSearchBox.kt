@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
@@ -19,6 +18,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.anos.feature.home.R
+import com.anos.ui.theme.AppTheme
 import com.anos.ui.theme.Dimens
 
 @Composable
@@ -41,8 +41,8 @@ fun HeaderSearchBox(
             placeholder = { Text(stringResource(R.string.home_search_hint)) },
             singleLine = true,
             colors = TextFieldDefaults.colors(
-                focusedContainerColor = MaterialTheme.colorScheme.surface,
-                unfocusedContainerColor = MaterialTheme.colorScheme.surface
+                focusedContainerColor = AppTheme.background.color,
+                unfocusedContainerColor = AppTheme.background.color,
             )
         )
         IconButton(onClick = {

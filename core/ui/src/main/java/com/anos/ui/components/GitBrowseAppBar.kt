@@ -3,9 +3,9 @@ package com.anos.ui.components
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -14,7 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.anos.ui.theme.GitBrowseTheme
+import com.anos.ui.theme.AppTheme
 
 @Composable
 fun GitBrowseAppBar(
@@ -32,7 +32,7 @@ fun GitBrowseAppBar(
             ) {
                 Text(
                     text = title,
-                    color = MaterialTheme.colorScheme.primary,
+                    color = AppTheme.colors.absoluteWhite,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                 )
@@ -44,7 +44,7 @@ fun GitBrowseAppBar(
                     Icon(
                         painter = painterResource(id = com.anos.ui.R.drawable.outline_arrow_back_24),
                         contentDescription = "Back",
-                        tint = MaterialTheme.colorScheme.primary
+                        tint = AppTheme.colors.absoluteWhite
                     )
                 }
             } else {
@@ -54,6 +54,9 @@ fun GitBrowseAppBar(
                 )
             }
         },
+        colors = TopAppBarDefaults.topAppBarColors().copy(
+            containerColor = AppTheme.colors.primary,
+        ),
         actions = {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -65,8 +68,8 @@ fun GitBrowseAppBar(
 
 @Preview
 @Composable
-private fun GitBrowseAppBarPreview() {
-    GitBrowseTheme {
+private fun AppAppBarPreview() {
+    AppTheme {
         GitBrowseAppBar(
             title = "My App",
             leftActions = {

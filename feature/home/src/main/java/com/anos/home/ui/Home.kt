@@ -10,7 +10,6 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -22,8 +21,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -37,17 +34,21 @@ import com.anos.home.ui.component.RepoCard
 import com.anos.home.ui.component.SettingsModalBottomSheet
 import com.anos.model.OwnerInfo
 import com.anos.model.Repo
+import com.anos.navigation.AppNavigator
+import com.anos.navigation.ScreenRoute
+import com.anos.navigation.currentComposeNavigator
 import com.anos.ui.components.GitBrowseAppBar
 import com.anos.ui.components.RetryBox
+import com.anos.ui.theme.AppTheme
 import com.anos.ui.theme.Dimens
-import com.anos.ui.theme.GitBrowseTheme
 import com.skydoves.compose.stability.runtime.TraceRecomposition
 
 @Composable
 fun HomeRoute(
-    onItemClick: (Repo) -> Unit,
     homeViewModel: HomeViewModel = hiltViewModel()
 ) {
+    val composeNavigator: AppNavigator = currentComposeNavigator
+
     val uiState by homeViewModel.uiState.collectAsStateWithLifecycle()
     val filteredList by homeViewModel.filteredRepoList.collectAsStateWithLifecycle()
     val searchQuery by homeViewModel.queryContent.collectAsStateWithLifecycle()
@@ -57,7 +58,11 @@ fun HomeRoute(
         filteredList = filteredList,
         searchQuery = searchQuery,
         onQueryContent = { homeViewModel.updateQueryContent(it) },
-        onItemClick = onItemClick,
+        onItemClick = { repo ->
+            composeNavigator.navigate(
+                ScreenRoute.DetailsScreen(repo = repo)
+            )
+        },
         onFetchNextPage = homeViewModel::fetchNextRepoList,
         onPullToRefresh = homeViewModel::refreshRepoList,
         onRetryClick = homeViewModel::refreshRepoList,
@@ -126,7 +131,7 @@ private fun HomeScreen(
             RetryBox(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.background),
+                    .background(AppTheme.background.color),
                 title = stringResource(R.string.home_error_title),
                 message = stringResource(R.string.home_repos_empty_message),
                 buttonText = stringResource(R.string.home_retry_btn),
@@ -165,7 +170,7 @@ private fun HomeHeader(
                     Icon(
                         painter = painterResource(id = com.anos.ui.R.drawable.outline_reorder_24),
                         contentDescription = "Reorder",
-                        tint = MaterialTheme.colorScheme.primary,
+                        tint = AppTheme.colors.absoluteWhite,
                     )
                 }
             },
@@ -174,7 +179,7 @@ private fun HomeHeader(
                     Icon(
                         painter = painterResource(id = com.anos.ui.R.drawable.outline_search_24),
                         contentDescription = "Search",
-                        tint = MaterialTheme.colorScheme.primary,
+                        tint = AppTheme.colors.absoluteWhite,
                     )
                 }
             }
@@ -228,7 +233,7 @@ private fun HomeContent(
 @Preview
 @Composable
 private fun HomeScreenPreview() {
-    GitBrowseTheme {
+    AppTheme {
         HomeScreen(
             filteredList = (0..9).map { Repo(id = it, owner = OwnerInfo(login = "login $it")) }.toList(),
             uiState = HomeUiState.Idle,
