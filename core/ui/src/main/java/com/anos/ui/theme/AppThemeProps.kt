@@ -35,7 +35,7 @@ fun AppTheme(
     }
 }
 
-object AppTheme {
+object AppThemeProps {
     /**
      * Retrieves the current [AppColors] at the call site's position in the hierarchy.
      */

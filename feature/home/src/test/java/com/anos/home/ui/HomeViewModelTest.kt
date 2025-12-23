@@ -12,6 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -431,6 +432,8 @@ class HomeViewModelTest {
         assertEquals(HomeUiState.Loading, viewModel.uiState.value)
 
         // When - try to fetch next while loading
+        viewModel.fetchNextRepoList()
+        viewModel.fetchNextRepoList()
         viewModel.fetchNextRepoList()
         advanceUntilIdle()
 

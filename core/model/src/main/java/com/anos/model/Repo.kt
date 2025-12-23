@@ -24,4 +24,11 @@ data class Repo(
 
     @SerialName(value = "owner")
     val owner: OwnerInfo,
-) : Parcelable
+) : Parcelable {
+
+    fun contains(query: String): Boolean {
+        val lowerCaseQuery = query.lowercase()
+        return (fullName?.lowercase()?.contains(lowerCaseQuery) == true) ||
+               (description?.lowercase()?.contains(lowerCaseQuery) == true)
+    }
+}

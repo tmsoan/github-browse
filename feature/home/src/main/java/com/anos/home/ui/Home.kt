@@ -1,6 +1,5 @@
 package com.anos.home.ui
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,7 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.anos.feature.home.R
-import com.anos.home.ui.component.HeaderSearchBox
+import com.anos.home.ui.component.HomeTopBarWithSearch
 import com.anos.home.ui.component.RepoCard
 import com.anos.home.ui.component.SettingsModalBottomSheet
 import com.anos.model.OwnerInfo
@@ -37,9 +36,10 @@ import com.anos.model.Repo
 import com.anos.navigation.AppNavigator
 import com.anos.navigation.ScreenRoute
 import com.anos.navigation.currentComposeNavigator
-import com.anos.ui.components.GitBrowseAppBar
+import com.anos.ui.components.MyAppBar
 import com.anos.ui.components.RetryBox
 import com.anos.ui.theme.AppTheme
+import com.anos.ui.theme.AppThemeProps
 import com.anos.ui.theme.Dimens
 import com.skydoves.compose.stability.runtime.TraceRecomposition
 
@@ -69,7 +69,6 @@ fun HomeRoute(
     )
 }
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @TraceRecomposition(threshold = 3)
 @Composable
 private fun HomeScreen(
@@ -84,7 +83,7 @@ private fun HomeScreen(
 ) {
     val sheetState = rememberModalBottomSheetState()
     val showSettingsSheet = remember { mutableStateOf(false) }
-    val isSearching = remember { mutableStateOf(false) }
+    val enabledSearch = remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
 
     if (showSettingsSheet.value) {
@@ -99,18 +98,18 @@ private fun HomeScreen(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             HomeHeader(
-                isSearching = isSearching.value,
+                enabledSearch = enabledSearch.value,
                 searchQuery = searchQuery,
                 onQueryContent = onQueryContent,
                 onSearchCloseClick = {
-                    isSearching.value = false
+                    enabledSearch.value = false
                     onQueryContent("")
                 },
                 onMenuClick = {
                     showSettingsSheet.value = true
                 },
                 onSearchClick = {
-                    isSearching.value = true
+                    enabledSearch.value = true
                 }
             )
         }
@@ -118,20 +117,21 @@ private fun HomeScreen(
         HomeContent(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues),
-            uiState = uiState,
-            isSearching = isSearching.value,
+                .padding(paddingValues)
+                .background(AppThemeProps.background.color),
+            isLoading = uiState is HomeUiState.Loading,
+            enabledSearch = enabledSearch.value,
             repoList = filteredList,
             onItemClick = onItemClick,
             onFetchNextPage = onFetchNextPage,
             onPullToRefresh = onPullToRefresh,
         )
 
-        if (uiState is HomeUiState.Error && !isSearching.value) {
+        if (uiState is HomeUiState.Error && !enabledSearch.value) {
             RetryBox(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(AppTheme.background.color),
+                    .background(AppThemeProps.background.color),
                 title = stringResource(R.string.home_error_title),
                 message = stringResource(R.string.home_repos_empty_message),
                 buttonText = stringResource(R.string.home_retry_btn),
@@ -149,28 +149,28 @@ private fun HomeScreen(
 
 @Composable
 private fun HomeHeader(
-    isSearching: Boolean,
+    enabledSearch: Boolean,
     searchQuery: String,
     onQueryContent: (String) -> Unit,
     onSearchCloseClick: () -> Unit,
     onMenuClick: () -> Unit,
     onSearchClick: () -> Unit,
 ) {
-    if (isSearching) {
-        HeaderSearchBox(
+    if (enabledSearch) {
+        HomeTopBarWithSearch(
             searchQuery = searchQuery,
             onQueryContent = onQueryContent,
             onCloseClick = onSearchCloseClick
         )
     } else {
-        GitBrowseAppBar(
+        MyAppBar(
             title = stringResource(R.string.home_title),
             leftActions = {
                 IconButton(onClick = onMenuClick) {
                     Icon(
                         painter = painterResource(id = com.anos.ui.R.drawable.outline_reorder_24),
                         contentDescription = "Reorder",
-                        tint = AppTheme.colors.absoluteWhite,
+                        tint = AppThemeProps.colors.absoluteWhite,
                     )
                 }
             },
@@ -179,7 +179,7 @@ private fun HomeHeader(
                     Icon(
                         painter = painterResource(id = com.anos.ui.R.drawable.outline_search_24),
                         contentDescription = "Search",
-                        tint = AppTheme.colors.absoluteWhite,
+                        tint = AppThemeProps.colors.absoluteWhite,
                     )
                 }
             }
@@ -191,9 +191,9 @@ private fun HomeHeader(
 @Composable
 private fun HomeContent(
     modifier: Modifier = Modifier,
-    uiState: HomeUiState,
     repoList: List<Repo>,
-    isSearching: Boolean,
+    isLoading: Boolean = false,
+    enabledSearch: Boolean,
     onItemClick: (Repo) -> Unit,
     onFetchNextPage: () -> Unit,
     onPullToRefresh: () -> Unit,
@@ -203,9 +203,9 @@ private fun HomeContent(
     PullToRefreshBox(
         modifier = modifier,
         state = pullToRefreshState,
-        isRefreshing = uiState == HomeUiState.Loading,
+        isRefreshing = isLoading,
         onRefresh = {
-            if (!isSearching) {
+            if (!enabledSearch) {
                 onPullToRefresh()
             }
         },
@@ -218,7 +218,7 @@ private fun HomeContent(
             contentPadding = PaddingValues(Dimens.spacing8),
         ) {
             itemsIndexed(items = repoList, key = { _, repo -> repo.id }) { index, repo ->
-                if (!isSearching && (index + 1) >= repoList.size && uiState != HomeUiState.Loading) {
+                if (!enabledSearch && (index + 3) >= repoList.size) {
                     onFetchNextPage()
                 }
                 RepoCard(

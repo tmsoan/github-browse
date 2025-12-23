@@ -15,9 +15,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.anos.ui.theme.AppTheme
+import com.anos.ui.theme.AppThemeProps
 
 @Composable
-fun GitBrowseAppBar(
+fun MyAppBar(
     title: String,
     showBackIcon: Boolean = false,
     onBackClick: (() -> Unit)? = null,
@@ -32,7 +33,7 @@ fun GitBrowseAppBar(
             ) {
                 Text(
                     text = title,
-                    color = AppTheme.colors.absoluteWhite,
+                    color = AppThemeProps.colors.absoluteWhite,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                 )
@@ -44,7 +45,7 @@ fun GitBrowseAppBar(
                     Icon(
                         painter = painterResource(id = com.anos.ui.R.drawable.outline_arrow_back_24),
                         contentDescription = "Back",
-                        tint = AppTheme.colors.absoluteWhite
+                        tint = AppThemeProps.colors.absoluteWhite
                     )
                 }
             } else {
@@ -55,7 +56,7 @@ fun GitBrowseAppBar(
             }
         },
         colors = TopAppBarDefaults.topAppBarColors().copy(
-            containerColor = AppTheme.colors.primary,
+            containerColor = AppThemeProps.colors.primary,
         ),
         actions = {
             Row(
@@ -70,7 +71,7 @@ fun GitBrowseAppBar(
 @Composable
 private fun AppAppBarPreview() {
     AppTheme {
-        GitBrowseAppBar(
+        MyAppBar(
             title = "My App",
             leftActions = {
                 Text("L", modifier = Modifier.padding(start = 8.dp))

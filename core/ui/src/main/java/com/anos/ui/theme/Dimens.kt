@@ -39,7 +39,7 @@ object Dimens {
     val elevationLarge: Dp = 8.dp
 
     // App Bar
-    val appBarHeight: Dp = 56.dp
+    val appBarSearchHeight: Dp = 48.dp
 
     // Stroke Width
     val strokeWidthThin: Dp = 1.dp

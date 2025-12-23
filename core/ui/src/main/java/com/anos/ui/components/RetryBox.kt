@@ -1,17 +1,20 @@
 package com.anos.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.sp
+import com.anos.ui.theme.AppThemeProps
 import com.anos.ui.theme.Dimens
 
 @Composable
@@ -20,12 +23,13 @@ fun RetryBox(
     title: String,
     message: String,
     buttonText: String,
-  onRetryClick: () -> Unit,
+    onRetryClick: () -> Unit,
 ) {
     Box(
         modifier = modifier
             .fillMaxSize()
-            .padding(Dimens.spacing16),
+            .padding(Dimens.spacing16)
+            .background(AppThemeProps.background.color),
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -34,11 +38,15 @@ fun RetryBox(
         ) {
             Text(
                 text = title,
-                style = MaterialTheme.typography.titleMedium,
+                color = AppThemeProps.colors.black,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
             )
             Text(
                 text = message,
-                style = MaterialTheme.typography.bodyMedium,
+                color = AppThemeProps.colors.black,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Normal,
                 textAlign = TextAlign.Center
             )
             Button(onClick = onRetryClick) {

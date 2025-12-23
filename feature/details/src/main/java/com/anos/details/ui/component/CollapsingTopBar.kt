@@ -1,5 +1,6 @@
 package com.anos.details.ui.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
@@ -14,15 +15,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import com.anos.ui.theme.AppTheme
+import com.anos.ui.theme.AppThemeProps
 import com.anos.ui.theme.Dimens
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
@@ -31,7 +35,7 @@ private val titleSizeBig = 22.sp
 private val titleSizeSmall = 18.sp
 
 @Composable
-internal fun CollapsingTopBar(
+internal fun RepoDetailsTopBar(
     title: String,
     avatarUrl: String?,
     onBackClick: () -> Unit,
@@ -57,7 +61,8 @@ internal fun CollapsingTopBar(
                 GlideImage(
                     modifier = Modifier
                         .size(avatarSize)
-                        .clip(RoundedCornerShape(Dimens.radiusLarge)),
+                        .clip(RoundedCornerShape(Dimens.radiusLarge))
+                        .background(Color.White.copy(alpha = 0.5f)),
                     imageModel = { avatarUrl },
                     imageOptions = ImageOptions(contentScale = ContentScale.Crop),
                     previewPlaceholder = painterResource(id = com.anos.ui.R.drawable.outline_background_replace_24),
@@ -67,7 +72,8 @@ internal fun CollapsingTopBar(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     fontSize = titleFontSize,
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.SemiBold,
+                    color = AppThemeProps.colors.absoluteWhite
                 )
             }
         },
@@ -76,13 +82,13 @@ internal fun CollapsingTopBar(
                 Icon(
                     painter = painterResource(id = com.anos.ui.R.drawable.outline_arrow_back_24),
                     contentDescription = "Back",
-                    tint = AppTheme.colors.primary
+                    tint = AppThemeProps.colors.absoluteWhite
                 )
             }
         },
         colors = TopAppBarDefaults.largeTopAppBarColors(
-            containerColor = AppTheme.background.color,
-            scrolledContainerColor = AppTheme.background.color,
+            containerColor = AppThemeProps.colors.primary,
+            scrolledContainerColor = AppThemeProps.colors.primary,
         ),
         scrollBehavior = scrollBehavior
     )
@@ -96,4 +102,17 @@ private fun lerp(start: Dp, stop: Dp, fraction: Float): Dp {
 @Composable
 private fun lerp(start: TextUnit, stop: TextUnit, fraction: Float): TextUnit {
     return (start.value + (stop.value - start.value) * fraction).sp
+}
+
+@Preview
+@Composable
+private fun RepoDetailsTopBarPreview() {
+    AppTheme {
+        RepoDetailsTopBar(
+            title = "Repository Name",
+            avatarUrl = null,
+            onBackClick = {},
+            scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+        )
+    }
 }

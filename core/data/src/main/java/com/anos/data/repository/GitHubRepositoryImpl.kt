@@ -98,7 +98,7 @@ internal class GitHubRepositoryImpl @Inject constructor(
     }.flowOn(ioDispatcher)
 
     /**
-     * fetches a [ReadmeContent] from the api
+     * fetches a [com.anos.model.ReadmeContent] from the api
      */
     override suspend fun getReadMeContent(
         owner: String,

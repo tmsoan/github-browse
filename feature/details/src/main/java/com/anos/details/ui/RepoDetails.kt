@@ -22,21 +22,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.anos.common.convertUtcToLocal
 import com.anos.common.decodeBase64
-import com.anos.details.ui.component.CollapsingTopBar
+import com.anos.details.ui.component.RepoDetailsTopBar
 import com.anos.details.ui.component.IconLabel
 import com.anos.details.ui.component.RepoDetailsSkeleton
 import com.anos.details.ui.component.SlightHorizontalDivider
 import com.anos.feature.details.R
+import com.anos.model.OwnerInfo
 import com.anos.model.ReadmeContent
 import com.anos.model.Repo
 import com.anos.model.RepoInfo
 import com.anos.navigation.currentComposeNavigator
 import com.anos.ui.components.RetryBox
 import com.anos.ui.theme.AppTheme
+import com.anos.ui.theme.AppThemeProps
 import com.anos.ui.theme.Dimens
 import dev.jeziellago.compose.markdowntext.MarkdownText
 
@@ -82,7 +85,7 @@ private fun DetailsScreen(
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            CollapsingTopBar(
+            RepoDetailsTopBar(
                 title = repoInfo?.name.orEmpty(),
                 avatarUrl = repoInfo?.owner?.avatarUrl,
                 onBackClick = onBack,
@@ -107,7 +110,7 @@ private fun DetailsScreen(
                 RetryBox(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(AppTheme.background.color),
+                        .background(AppThemeProps.background.color),
                     title = stringResource(R.string.details_error_title),
                     message = stringResource(R.string.details_repos_empty_message),
                     buttonText = stringResource(R.string.details_retry_btn),
@@ -253,6 +256,34 @@ private fun ReadmeContent(
             modifier = Modifier
                 .fillMaxSize(),
             markdown = decodeBase64(readmeContent.content.orEmpty()).orEmpty()
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun DetailsScreenPreview() {
+    AppTheme {
+        DetailsContent(
+            repoInfo = RepoInfo(
+                id = 1,
+                name = "Repo Name",
+                fullName = "Owner/Repo Name",
+                description = "This is a sample repository used for previewing the details screen in Jetpack Compose.",
+                owner = OwnerInfo(
+                    login = "owner",
+                    avatarUrl = "https://avatars.githubusercontent.com/u/1?v=4"
+                ),
+                stargazersCount = 1234,
+                forksCount = 567,
+                updatedAt = "2024-06-01T12:34:56Z",
+                homepage = "https://example.com",
+                topics = listOf("android", "jetpack-compose", "kotlin")
+            ),
+            readmeContent = ReadmeContent(
+                content = "## Sample README\nThis is a sample README content for preview purposes.\n\n- Item 1\n- Item 2\n- Item 3",
+                downloadUrl = "https://example.com/README.md"
+            )
         )
     }
 }
