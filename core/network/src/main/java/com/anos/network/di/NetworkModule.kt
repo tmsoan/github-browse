@@ -61,8 +61,8 @@ internal object NetworkModule {
                 logging.level = HttpLoggingInterceptor.Level.BODY
                 addInterceptor(logging)
             }
-            cache(cache)
-            addInterceptor(cacheInterceptor)
+            //cache(cache)
+            //addInterceptor(cacheInterceptor)
             connectTimeout(10, TimeUnit.SECONDS)
             readTimeout(10, TimeUnit.SECONDS)
             // refresh token
