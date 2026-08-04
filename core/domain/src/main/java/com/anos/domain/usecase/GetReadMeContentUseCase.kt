@@ -1,10 +1,13 @@
 package com.anos.domain.usecase
 
 import com.anos.domain.repository.GitHubRepository
-import javax.inject.Inject
+import org.koin.core.annotation.Factory
+import org.koin.core.annotation.Provided
 
-class GetReadMeContentUseCase @Inject constructor(
-    private val gitHubRepository: GitHubRepository,
+@Factory
+class GetReadMeContentUseCase(
+    // Add @Provided here to tell KSP: "Don't worry, this will exist at runtime"
+    @Provided private val gitHubRepository: GitHubRepository,
 ) {
     suspend operator fun invoke(
         owner: String,

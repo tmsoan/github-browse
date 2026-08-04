@@ -1,9 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
+    <!--
+      Pins are SPKI SHA-256 hashes of GitHub's CA certificates, not of the leaf:
+      the *.github.com leaf is reissued roughly every 90 days, so pinning it
+      guarantees breakage. Verify with:
+
+        openssl s_client -showcerts -servername api.github.com -connect api.github.com:443 </dev/null \
+          | openssl x509 -pubkey -noout \
+          | openssl pkey -pubin -outform der \
+          | openssl dgst -sha256 -binary | openssl enc -base64
+
+      `expiration` is a safety valve: past that date pinning stops being enforced
+      rather than bricking every network call, which is what happened when GitHub
+      moved from the previously pinned CA to Sectigo. Re-check the chain and push
+      the date out before it lapses.
+    -->
     <domain-config>
         <domain includeSubdomains="true">api.github.com</domain>
-        <pin-set>
-            <pin digest="SHA-256">1EkvzibgiE3k+xdsv+7UU5vhV8kdFCQiUiFdMX5Guuk=</pin>
+        <pin-set expiration="2027-06-01">
+            <!-- Sectigo Public Server Authentication CA DV E36 (expires 2036-03-21) -->
+            <pin digest="SHA-256">ZSagvDzjltLkewXEBuDxIzpW/dpVw1Juvvmd0hhkzdY=</pin>
+            <!-- backup: Sectigo Public Server Authentication Root E46 (expires 2038-01-18) -->
+            <pin digest="SHA-256">sLVjNUaFYfW7n6EtgBeEpjOlcnBdNPMrZDRF36iwBdE=</pin>
         </pin-set>
     </domain-config>
 </network-security-config>

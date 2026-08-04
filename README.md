@@ -7,7 +7,7 @@ GitBrowse is a small Android app that lets users browse public GitHub repositori
 ## 🧩 Tech Stack
 - **Kotlin** + **Jetpack Compose (Material3)**
 - **Clean Architecture & MVVM**
-- **Hilt** for dependency injection
+- **Koin** (+ Koin Annotations/KSP) for dependency injection
 - **Retrofit** for API requests
 - **Landscapist Glide** for image loading
 - **Navigation Compose** for screen transitions
@@ -53,7 +53,7 @@ Open the project in Android Studio and run the app on an emulator or device.
 ## 📦 Main Dependencies
 - androidx.compose.material3
 - androidx.navigation.compose
-- androidx.hilt.navigation.compose
+- koin-android / koin-compose-viewmodel / koin-annotations
 - retrofit2
 - Landscapist Glide
 - Room

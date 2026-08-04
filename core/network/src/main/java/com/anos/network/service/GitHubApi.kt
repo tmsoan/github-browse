@@ -25,7 +25,11 @@ interface GitHubApi {
         @Path("repo") repo: String
     ): Response<RepoInfo>
 
-    @GET("repos/{owner}/{repo}/contents/README")
+    /**
+     * Resolves whichever readme the repo actually has (README.md, .rst, ...).
+     * `contents/README` only matches a file named exactly `README`, so it 404s for most repos.
+     */
+    @GET("repos/{owner}/{repo}/readme")
     suspend fun getReadMeContent(
         @Path("owner") owner: String,
         @Path("repo") repo: String

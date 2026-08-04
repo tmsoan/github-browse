@@ -9,10 +9,6 @@ import com.anos.model.OwnerInfo
 import com.anos.model.ReadmeContent
 import com.anos.model.Repo
 import com.anos.model.RepoInfo
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -20,17 +16,16 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import org.koin.android.annotation.KoinViewModel
+import org.koin.core.annotation.InjectedParam
 
-@HiltViewModel(assistedFactory = RepoDetailsViewModel.Factory::class)
-class RepoDetailsViewModel @AssistedInject constructor(
+@KoinViewModel
+class RepoDetailsViewModel(
     private val getRepositoryDetailsUseCase: GetRepositoryDetailsUseCase,
     private val getReadMeContentUseCase: GetReadMeContentUseCase,
-    @Assisted private val repo: Repo,
+    // Koin equivalent of Hilt's @Assisted: supplied by the caller via parametersOf(repo)
+    @InjectedParam private val repo: Repo,
 ) : ViewModel() {
-    @AssistedFactory
-    interface Factory {
-        fun create(repo: Repo): RepoDetailsViewModel
-    }
 
     private val _uiState = MutableStateFlow<DetailsUiState>(DetailsUiState.Loading)
     val uiState: StateFlow<DetailsUiState> = _uiState

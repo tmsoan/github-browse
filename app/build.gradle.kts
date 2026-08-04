@@ -1,9 +1,8 @@
 plugins {
-    id("kotlin-kapt")
     alias(libs.plugins.gitbrowse.android.application)
     alias(libs.plugins.gitbrowse.android.application.compose)
-    alias(libs.plugins.gitbrowse.android.hilt)
     alias(libs.plugins.stability.analyzer)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -58,6 +57,14 @@ dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:ui"))
     implementation(project(":core:navigation"))
+
+    // Koin only aggregates @Configuration modules that are on the app's compile classpath,
+    // so the DI-owning core modules are depended on directly even though the features use them.
+    implementation(project(":core:domain"))
+    implementation(project(":core:data"))
+    implementation(project(":core:network"))
+    implementation(project(":core:database"))
+
     implementation(project(":feature:home"))
     implementation(project(":feature:details"))
 
@@ -65,12 +72,22 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.metrics.performance)
 
     // test and debug
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    // hilt
-    ksp(libs.hilt.compiler)
+    // koin
+    implementation(libs.koin.core)
+    implementation(libs.koin.compose.viewmodel)
+    implementation(libs.koin.androidx.worker)
+    implementation(libs.koin.annotations)
+    ksp(libs.koin.ksp.compiler)
+    implementation(libs.kotzilla.sdk)
+}
+
+ksp {
+    arg("KOIN_CONFIG_CHECK","true")
 }

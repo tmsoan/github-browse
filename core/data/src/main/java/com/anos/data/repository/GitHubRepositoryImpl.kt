@@ -14,9 +14,10 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
-import javax.inject.Inject
+import org.koin.core.annotation.Single
 
-internal class GitHubRepositoryImpl @Inject constructor(
+@Single
+internal class GitHubRepositoryImpl(
     private val remoteDataSource: RemoteDataSource,
     private val repoDao: RepoDao,
     @param:Dispatcher(AppDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,

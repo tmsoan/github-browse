@@ -1,15 +1,14 @@
 package com.anos.data.di
 
-import com.anos.data.repository.GitHubRepositoryImpl
-import com.anos.domain.repository.GitHubRepository
-import dagger.Binds
-import dagger.Module
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
+import org.koin.core.annotation.ComponentScan
+import org.koin.core.annotation.Configuration
+import org.koin.core.annotation.Module
 
+/**
+ * Scans the `repository` package only: a broader `com.anos.data` scan also prefix-matches
+ * `com.anos.database`, which would pull database definitions in a second time.
+ */
 @Module
-@InstallIn(SingletonComponent::class)
-abstract class DataModule {
-    @Binds
-    internal abstract fun bindGitHubRepository(impl: GitHubRepositoryImpl): GitHubRepository
-}
+@Configuration
+@ComponentScan("com.anos.data.repository")
+class DataModule

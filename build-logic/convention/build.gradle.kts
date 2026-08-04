@@ -36,10 +36,6 @@ gradlePlugin {
             id = libs.plugins.gitbrowse.android.library.compose.get().pluginId
             implementationClass = "AndroidLibraryComposeConventionPlugin"
         }
-        register("hilt") {
-            id = libs.plugins.gitbrowse.android.hilt.get().pluginId
-            implementationClass = "AndroidHiltConventionPlugin"
-        }
         register("androidFeature") {
             id = libs.plugins.gitbrowse.android.feature.get().pluginId
             implementationClass = "AndroidFeatureConventionPlugin"

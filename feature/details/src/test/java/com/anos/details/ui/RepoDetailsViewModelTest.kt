@@ -1,11 +1,11 @@
 package com.anos.details.ui
 
-import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.anos.domain.usecase.GetReadMeContentUseCase
 import com.anos.domain.usecase.GetRepositoryDetailsUseCase
 import com.anos.model.OwnerInfo
 import com.anos.model.ReadmeContent
+import com.anos.model.Repo
 import com.anos.model.RepoInfo
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
@@ -34,7 +34,7 @@ class RepoDetailsViewModelTest {
     private lateinit var viewModel: RepoDetailsViewModel
     private lateinit var getRepositoryDetailsUseCase: GetRepositoryDetailsUseCase
     private lateinit var getReadMeContentUseCase: GetReadMeContentUseCase
-    private lateinit var savedStateHandle: SavedStateHandle
+    private lateinit var repo: Repo
     private val testDispatcher = StandardTestDispatcher()
 
     private val mockRepoInfo = RepoInfo(
@@ -67,19 +67,12 @@ class RepoDetailsViewModelTest {
         getRepositoryDetailsUseCase = mockk(relaxed = true)
         getReadMeContentUseCase = mockk(relaxed = true)
 
-        val initialRepoInfo = RepoInfo(
+        repo = Repo(
             id = 1,
             name = "test-repo",
             owner = OwnerInfo(
                 login = "owner",
             ),
-        )
-        savedStateHandle = SavedStateHandle(
-            mapOf(
-                "repoId" to initialRepoInfo.id,
-                "owner" to initialRepoInfo.owner.login,
-                "name" to initialRepoInfo.name
-            )
         )
     }
 
@@ -94,7 +87,7 @@ class RepoDetailsViewModelTest {
         viewModel = RepoDetailsViewModel(
             getRepositoryDetailsUseCase,
             getReadMeContentUseCase,
-            savedStateHandle
+            repo
         )
 
         // Then
@@ -116,7 +109,7 @@ class RepoDetailsViewModelTest {
         viewModel = RepoDetailsViewModel(
             getRepositoryDetailsUseCase,
             getReadMeContentUseCase,
-            savedStateHandle
+            repo
         )
 
         // Then
@@ -152,7 +145,7 @@ class RepoDetailsViewModelTest {
         viewModel = RepoDetailsViewModel(
             getRepositoryDetailsUseCase,
             getReadMeContentUseCase,
-            savedStateHandle
+            repo
         )
 
         // Then
@@ -196,7 +189,7 @@ class RepoDetailsViewModelTest {
         viewModel = RepoDetailsViewModel(
             getRepositoryDetailsUseCase,
             getReadMeContentUseCase,
-            savedStateHandle
+            repo
         )
 
         // Then
@@ -235,7 +228,7 @@ class RepoDetailsViewModelTest {
         viewModel = RepoDetailsViewModel(
             getRepositoryDetailsUseCase,
             getReadMeContentUseCase,
-            savedStateHandle
+            repo
         )
 
         viewModel.repoInfo.test {
@@ -265,7 +258,7 @@ class RepoDetailsViewModelTest {
         viewModel = RepoDetailsViewModel(
             getRepositoryDetailsUseCase,
             getReadMeContentUseCase,
-            savedStateHandle
+            repo
         )
         advanceUntilIdle()
 
@@ -304,7 +297,7 @@ class RepoDetailsViewModelTest {
         viewModel = RepoDetailsViewModel(
             getRepositoryDetailsUseCase,
             getReadMeContentUseCase,
-            savedStateHandle
+            repo
         )
         advanceUntilIdle()
 
