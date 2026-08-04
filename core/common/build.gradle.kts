@@ -1,7 +1,5 @@
 plugins {
-    id("kotlin-kapt")
     alias(libs.plugins.gitbrowse.android.library)
-//    alias(libs.plugins.gitbrowse.android.hilt)
     alias(libs.plugins.ksp)
 }
 

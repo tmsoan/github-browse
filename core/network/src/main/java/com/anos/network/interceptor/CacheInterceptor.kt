@@ -3,10 +3,11 @@ package com.anos.network.interceptor
 import okhttp3.CacheControl
 import okhttp3.Interceptor
 import okhttp3.Response
+import org.koin.core.annotation.Single
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 
-class CacheInterceptor @Inject constructor() : Interceptor {
+@Single
+class CacheInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         var request = chain.request()
         val cacheControl = CacheControl.Builder()

@@ -4,10 +4,9 @@ import androidx.room.ProvidedTypeConverter
 import androidx.room.TypeConverter
 import com.anos.model.OwnerInfo
 import kotlinx.serialization.json.Json
-import javax.inject.Inject
 
 @ProvidedTypeConverter
-class RepoTypeConverter @Inject constructor(
+class RepoTypeConverter(
   private val json: Json,
 ) {
   @TypeConverter

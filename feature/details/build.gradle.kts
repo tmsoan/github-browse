@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.gitbrowse.android.feature)
     alias(libs.plugins.gitbrowse.android.library.compose)
-//    alias(libs.plugins.gitbrowse.android.hilt)
     alias(libs.plugins.stability.analyzer)
 }
 

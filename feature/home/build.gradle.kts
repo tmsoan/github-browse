@@ -1,9 +1,7 @@
 plugins {
     alias(libs.plugins.gitbrowse.android.feature)
     alias(libs.plugins.gitbrowse.android.library.compose)
-//    alias(libs.plugins.gitbrowse.android.hilt)
     alias(libs.plugins.stability.analyzer)
-    alias(libs.plugins.ksp)
 }
 
 android {
@@ -11,9 +9,7 @@ android {
 }
 
 dependencies {
-    implementation(libs.koin.compose.viewmodel)
-    implementation(libs.koin.annotations)
-    ksp(libs.koin.ksp.compiler)
+    // koin (compose-viewmodel, annotations, ksp compiler) comes from the feature convention plugin
 
     testImplementation(libs.mockk)
     testImplementation(libs.junit)

@@ -1,7 +1,5 @@
 plugins {
-    id("kotlin-kapt")
     alias(libs.plugins.gitbrowse.android.library)
-//    alias(libs.plugins.gitbrowse.android.hilt)
     alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.ksp)
 }
@@ -22,14 +20,13 @@ android {
 dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:common"))
-
-    implementation(libs.javax.inject)
     implementation(libs.koin.core)
     implementation(libs.koin.annotations)
     ksp(libs.koin.ksp.compiler)
 
     implementation(libs.androidx.core.ktx)
     testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 

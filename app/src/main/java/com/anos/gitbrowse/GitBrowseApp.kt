@@ -8,12 +8,12 @@ import com.skydoves.compose.stability.runtime.RecompositionLogger
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.workmanager.koin.workManagerFactory
 import org.koin.core.annotation.KoinApplication
-import org.koin.core.context.startKoin
+import org.koin.ksp.generated.startKoin
 
 @KoinApplication
 class GitBrowseApp : Application() {
     override fun onCreate() {
-        // Start Koin before Hilt
+        // generated extension: pulls in every @Configuration module found on the classpath
         startKoin {
             androidContext(this@GitBrowseApp)
             workManagerFactory()

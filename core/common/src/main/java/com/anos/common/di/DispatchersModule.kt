@@ -15,11 +15,11 @@ import org.koin.core.annotation.Single
 @Configuration
 object DispatchersModule {
 
-    @Single // formally Provides in Hilt version
+    @Single
     @Dispatcher(AppDispatchers.IO)
     fun providesIODispatcher(): CoroutineDispatcher = Dispatchers.IO
 
-    @Single // formally Provides in Hilt version
+    @Single
     @Dispatcher(AppDispatchers.Default)
     fun providesDefaultDispatcher(): CoroutineDispatcher = Dispatchers.Default
 }

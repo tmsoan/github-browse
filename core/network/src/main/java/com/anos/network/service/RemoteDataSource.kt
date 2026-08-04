@@ -5,9 +5,10 @@ import com.anos.model.Repo
 import com.anos.model.RepoInfo
 import com.anos.model.result.NetworkResult
 import com.anos.network.safeApiCall
-import javax.inject.Inject
+import org.koin.core.annotation.Single
 
-class RemoteDataSource @Inject constructor(
+@Single
+class RemoteDataSource(
     val gitHubApi: GitHubApi,
 ) {
     suspend fun fetchPublicRepositories(since: Int?): NetworkResult<List<Repo>> =

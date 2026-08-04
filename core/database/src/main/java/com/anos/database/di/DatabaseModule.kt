@@ -8,8 +8,8 @@ import com.anos.database.RepoDao
 import com.anos.database.RepoInfoDao
 import kotlinx.serialization.json.Json
 import org.koin.core.annotation.Configuration
-import org.koin.core.annotation.InjectedParam
 import org.koin.core.annotation.Module
+import org.koin.core.annotation.Provided
 import org.koin.core.annotation.Single
 
 @Module
@@ -29,18 +29,20 @@ internal object DatabaseModule {
 @Module(includes = [DatabaseModule::class])
 @Configuration
 class DaoModule {
-    @Single // formally Provides in Hilt version
+    @Single
     fun provideRepoDao(appDatabase: GitHubRepoDatabase): RepoDao {
         return appDatabase.repoDao()
     }
 
-    @Single // formally Provides in Hilt version
+    @Single
     fun provideRepoInfoDao(appDatabase: GitHubRepoDatabase): RepoInfoDao {
         return appDatabase.repoInfoDao()
     }
 
-    @Single // formally Provides in Hilt version
-    fun provideTypeConverter(@InjectedParam json: Json): RepoTypeConverter {
+    // [Json] is provided by :core:network, which this module does not depend on at compile time,
+    // hence @Provided to keep KOIN_CONFIG_CHECK happy.
+    @Single
+    fun provideTypeConverter(@Provided json: Json): RepoTypeConverter {
         return RepoTypeConverter(json)
     }
 }

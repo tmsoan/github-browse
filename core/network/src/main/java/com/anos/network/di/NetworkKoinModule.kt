@@ -3,6 +3,7 @@ package com.anos.network.di
 import android.content.Context
 import com.anos.network.BuildConfig
 import com.anos.network.interceptor.CacheInterceptor
+import com.anos.network.service.GitHubApi
 import kotlinx.serialization.json.Json
 import okhttp3.Cache
 import okhttp3.MediaType.Companion.toMediaType
@@ -19,7 +20,8 @@ import java.util.concurrent.TimeUnit
 @Module
 @Configuration
 @ComponentScan("com.anos.network")
-internal object NetworkKoinModule {
+// public: the generated app-level Koin configuration references this module by name
+object NetworkKoinModule {
 
     @Single
     fun provideOkHttpClient(): OkHttpClient.Builder {
@@ -67,5 +69,10 @@ internal object NetworkKoinModule {
             .client(okHttpClient)
             .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
             .build()
+    }
+
+    @Single
+    fun provideGitHubApi(retrofit: Retrofit): GitHubApi {
+        return retrofit.create(GitHubApi::class.java)
     }
 }
